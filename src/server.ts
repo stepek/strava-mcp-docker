@@ -230,34 +230,11 @@ server.tool(
     getSegmentLeaderboardTool.execute
 );
 
-// --- Helper Functions ---
-// Moving formatDuration to utils or keeping it here if broadly used.
-// For now, it's imported by getActivityLaps.ts
-export function formatDuration(seconds: number): string {
-    if (isNaN(seconds) || seconds < 0) {
-        return 'N/A';
-    }
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-
-    const parts: string[] = [];
-    if (hours > 0) {
-        parts.push(hours.toString().padStart(2, '0'));
-    }
-    parts.push(minutes.toString().padStart(2, '0'));
-    parts.push(secs.toString().padStart(2, '0'));
-
-    return parts.join(':');
-}
-
-// Removed other formatters - they are now local to their respective tools.
-
 // --- Server Startup ---
 async function startServer() {
   try {
         console.error(`Starting ${SERVER_NAME} v${serverVersion}...`);
-        
+
         // Load config from ~/.config/strava-mcp/ and merge with env vars
         const config = await loadConfig();
         if (config.accessToken && !process.env.STRAVA_ACCESS_TOKEN) {
@@ -272,7 +249,7 @@ async function startServer() {
         if (config.clientSecret && !process.env.STRAVA_CLIENT_SECRET) {
             process.env.STRAVA_CLIENT_SECRET = config.clientSecret;
         }
-        
+
     const transport = new StdioServerTransport();
     await server.connect(transport);
         console.error(`${SERVER_NAME} v${serverVersion} connected via Stdio. Tools registered.`);
