@@ -190,6 +190,40 @@ Then point Claude to your local build:
 }
 ```
 
+### Option D: Docker
+
+Build and run with Docker:
+
+```bash
+docker build -t strava-mcp-server .
+```
+
+Then update your Claude config:
+
+```json
+{
+  "mcpServers": {
+    "strava": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "strava-mcp-server"]
+    }
+  }
+}
+```
+
+To persist Strava credentials, add a volume mount:
+
+```json
+{
+  "mcpServers": {
+    "strava": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "-v", "~/.config/strava-mcp:/root/.config/strava-mcp", "strava-mcp-server"]
+    }
+  }
+}
+```
+
 ---
 
 ## Example Conversations
@@ -368,6 +402,31 @@ The server automatically refreshes expired tokens. New tokens are saved to both 
 npm install
 npm run build
 npm test
+```
+
+### Docker
+
+Build the Docker image:
+
+```bash
+docker build -t strava-mcp-server .
+```
+
+Run with environment variables:
+
+```bash
+docker run --rm -i \
+  -e STRAVA_CLIENT_ID=your_client_id \
+  -e STRAVA_CLIENT_SECRET=your_client_secret \
+  -e STRAVA_ACCESS_TOKEN=your_access_token \
+  -e STRAVA_REFRESH_TOKEN=your_refresh_token \
+  strava-mcp-server
+```
+
+Or run with persistent config:
+
+```bash
+docker run --rm -i -v ~/.config/strava-mcp:/root/.config/strava-mcp strava-mcp-server
 ```
 
 ### Activity Streams Optimization
