@@ -1,20 +1,10 @@
 # Multi-stage build for optimal image size
 FROM node:20-alpine AS builder
-
-# Set working directory
-WORKDIR /app
-
-# Copy package files
+WORKdir /app
 COPY package*.json ./
 COPY tsconfig.json ./
-
-# Install dependencies (including devDependencies for building)
 RUN npm ci
-
-# Copy source code
-COPY src ./src
-
-# Build TypeScript code
+copy src ./src
 RUN npm run build
 
 # Production stage
